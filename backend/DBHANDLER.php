@@ -53,13 +53,53 @@ class DBHANDLER
     //     }
     //     return $d;
     // }
+    function transact($from, $to, $amount)
+    {
+        $response = array();
+        $response['status'] = false;
+        $from = (int)$from;
+        $to = (int)$to;
+        $amount = (int)$amount;
+        $stmt1 = $this->connection->prepare("update user_account set amount= amount-$amount where id=?;");
 
+        $stmt1->bind_param("i", $from);
+        $stmt2 = $this->connection->prepare("update user_account set amount= amount+$amount where id=?;");
+        $stmt2->bind_param("i", $to);
+        if ($stmt1->execute() && $stmt2->execute()) {
+            $response['status'] = true;
+        }
+        return $response;
+    }
+    function getUserDetails($id)
+    {
+        $response = array();
+        $response['status'] = false;
+        $data = array();
+        $stmt = $this->connection->prepare("SELECT name,email,amount name FROM user_account where id=?;");
+        $id = (int)$id;
+        $stmt->bind_param("i", $id);
+        if ($stmt->execute()) {
+            $stmt->bind_result($name, $email, $amount);
+            $stmt->store_result();
+            if ($stmt->num_rows > 0) {
+                $response['status'] = true;
+                $stmt->fetch();
+                $data["name"] = $name;
+                $data["email"] = $email;
+                $data["id"] = $id;
+                $data["amount"] = $amount;
+                $response['data'] = $data;
+            }
+        }
+        return $response;
+    }
     function getCustomers()
     {
         $response = array();
         $response['status'] = false;
         $data = array();
         $stmt = $this->connection->prepare("SELECT id,name FROM user_account;");
+
         if ($stmt->execute()) {
             $stmt->bind_result($id, $name);
             $stmt->store_result();

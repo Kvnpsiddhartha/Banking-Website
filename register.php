@@ -25,10 +25,10 @@ if (isset($_POST['register'])) {
 
     if ($response['status']) {
         $_SESSION['userid'] = $response['userid'];
-        require("./baseup.php");
+        require("./navigation.php");
         echo "<h1>Registration Successful</h1>";
     } else {
-        require("./baseup.php");
+        require("./navigation.php");
         echo "<h1>Registration Unsuccessful</h1>";
     }
 } else {
@@ -36,6 +36,7 @@ if (isset($_POST['register'])) {
 ?>
     <div class="container">
         <div class="login-box">
+            <h1>Register</h1>
             <form id="login-form" method="POST">
                 <div class=" mb-3 row">
                     <label for="inputName" class="col-sm-2 col-form-label">Name</label>

@@ -35,6 +35,7 @@ if (isset($_POST['login'])) {
 ?>
     <div class="container">
         <div class="login-box">
+            <h1>Login </h1>
             <form id="login-form" method="POST">
                 <div class=" mb-3 row">
                     <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>

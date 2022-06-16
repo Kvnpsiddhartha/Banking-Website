@@ -13,9 +13,7 @@
           <li class="nav-item">
             <a class="nav-link" href="./customers.php">Customers</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Transfer</a>
-          </li>
+
           <li class="nav-item">
             <a class="nav-link" href="./register.php">Register</a>
           </li>
@@ -23,6 +21,9 @@
           // echo $_SESSION['userid'];
           if (isset($_SESSION['userid'])) {
           ?>
+            <li class="nav-item">
+              <a class="nav-link" href="./transfer.php">Transfer</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="./logout.php">Logout</a>
             </li>

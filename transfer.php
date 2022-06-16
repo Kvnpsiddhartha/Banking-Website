@@ -17,12 +17,15 @@ $resp = json_decode($resp, true);
 curl_close($curl);
 if ($resp['status']) {
     $data = $resp['data'];
-    echo '<div class="container"><h1>Customers</h1><br><div class="card"><ul class="list-group list-group-flush">';
+    echo '<div class="container"><h1>Select a Customer </h1><br><form method="POST" action="./transact.php" class="form-group">';
 
     foreach ($data as $d) {
-        echo '<li class="list-group-item">' . $d['name'] . "</li>";
+        if (!($d['id'] == $_SESSION['userid'])) {
+            echo '<div class="form-check"><input type="radio" name="customer_id" class="form-check-input" value="' . $d['id'] . '" id="' . $d['name'] . '"><label class="form-check-label" for="' . $d['name'] . '">' . $d['name'] . '</label></div>';
+        }
     }
-    echo "</ul></div>";
+    echo '</br><input type="submit" class="btn btn-primary" value="next" name="clist"/>';
+    echo "</form></div>";
 } else {
     echo "<h1>No Customers Found!</h1>";
 }
