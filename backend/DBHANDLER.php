@@ -53,6 +53,45 @@ class DBHANDLER
     //     }
     //     return $d;
     // }
+
+    function getHistory($id)
+    {
+        $response = array();
+        $response['status'] = false;
+        $data = array();
+        $id = (int)$id;
+        $stmt1 = $this->connection->prepare("select user_account.name,history.amount,history.date from history inner join user_account on history.toid=user_account.id where fromid=?");
+        $stmt1->bind_param("i", $id);
+        $stmt2 = $this->connection->prepare("select user_account.name,history.amount,history.date from history inner join user_account on history.fromid=user_account.id where toid=?");
+        $stmt2->bind_param("i", $id);
+        if ($stmt1->execute()) {
+            $stmt1->bind_result($cname, $amount, $date);
+            $stmt1->store_result();
+
+            $response['status'] = true;
+            if ($stmt1->num_rows > 0) {
+
+                while ($stmt1->fetch()) {
+                    array_push($data, array("cname" => $cname,  "amount" => -$amount, "date" => $date));
+                }
+            }
+        }
+        if ($stmt2->execute()) {
+            $stmt2->bind_result($cname, $amount, $date);
+            $stmt2->store_result();
+            if ($stmt2->num_rows > 0) {
+                while ($stmt2->fetch()) {
+                    array_push($data, array("cname" => $cname,  "amount" => $amount, "date" => $date));
+                }
+            }
+        }
+
+        $date = array_column($data, 'date');
+
+        array_multisort($date, SORT_DESC, $data);
+        $response['data'] = $data;
+        return $response;
+    }
     function transact($from, $to, $amount)
     {
         $response = array();
@@ -65,7 +104,9 @@ class DBHANDLER
         $stmt1->bind_param("i", $from);
         $stmt2 = $this->connection->prepare("update user_account set amount= amount+$amount where id=?;");
         $stmt2->bind_param("i", $to);
-        if ($stmt1->execute() && $stmt2->execute()) {
+        $stmt3 = $this->connection->prepare("insert into history(fromid,toid,amount) values(?,?,?);");
+        $stmt3->bind_param("iii", $from, $to, $amount);
+        if ($stmt1->execute() && $stmt2->execute() && $stmt3->execute()) {
             $response['status'] = true;
         }
         return $response;

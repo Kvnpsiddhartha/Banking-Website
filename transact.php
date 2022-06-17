@@ -23,6 +23,7 @@ if (isset($_SESSION['userid'])) {
         } else {
             echo '<h1 class="text-center"> Transaction Unsuccessful</h1>';
         }
+        unset($_POST['amount']);
     }
     $url = "http://localhost/Banking%20Website/backend/customerdetail.php";
     $postRequest = array("id" => $_SESSION['userid']);
@@ -37,7 +38,7 @@ if (isset($_SESSION['userid'])) {
     $respfrom = curl_exec($cURLConnection);
     $respfrom = json_decode($respfrom, true);
     curl_close($cURLConnection);
-    if (isset($_POST['submit'], $_POST['amount'])) {
+    if (isset($_POST['submit']) && $_POST['submit'] == "Transact") {
         $postRequest = array("id" => $_SESSION['to']);
     } else {
         $postRequest = array("id" => $_POST['customer_id']);
