@@ -29,6 +29,9 @@
               <a class="nav-link" href="./history.php">History</a>
             </li>
             <li class="nav-item float-right">
+              <a class="nav-link" href="./profile.php">My profile</a>
+            </li>
+            <li class="nav-item float-right">
               <a class="nav-link" href="./logout.php">Logout</a>
             </li>
 
